@@ -6,25 +6,24 @@ import offparser as pr
 
 class ProductCleaner:
 
-    attributes = ["product_name", ]
+    """This is a class for getting needed data from what is already parsed from an api"""
 
     def clean_data_from(self, parsed_data, category):
         """This function removes unecesseray data from what is downloaded for a given category"""
 
-        # Parsed list of dictionaries with one product per dictionary for a
-        # given category
+        # List of products definition for a given category
+        # Each product is represented by a dictionary structure inside this list
         product_list = parsed_data[category]["products"]
 
-        # Same structure as downloaded data (list of dictionaries) but with only needed attributes
-        # product is a dictionary in the list
+        # Only needed attributes are kept for each product 
         clean_data = [{attribute: product.get(
-            attribute) for attribute in ProductCleaner.attributes} for product in product_list]
+            attribute) for attribute in pr.api.attributes} for product in product_list]
 
         return clean_data
 
     def extract_attribute_list_per_category(
             self, parsed_data, category, attribute):
-        """This function returns a list of values for a given atrribute for each product of a given category"""
+        """for a given atrribute, for a given category, this function returns the list of this attribute values """
 
         clean_data = self.clean_data_from(parsed_data, category)
 
@@ -34,7 +33,7 @@ class ProductCleaner:
 
     def extract_attribute_list_per_product(
             self, parsed_data, category, wanted_product):
-        """This function returns a list of attributes for a given product within a given category"""
+        """For a given product,within a given category, this function returns a list of attribute value """
 
         clean_data = self.clean_data_from(parsed_data, category)
 
@@ -50,17 +49,17 @@ class ProductCleaner:
             product = products[0]
 
             product_attribute_list = [
-                product.get(attribute) for attribute in ProductCleaner.attributes]
+                product.get(attribute) for attribute in pr.api.attributes]
 
         return product_attribute_list
 
 
 cleaner = ProductCleaner()
-#unhealthy = cleaner.clean_data_from(pr.unhealthy_food_about,"Pizzas")
-# print(unhealthy)
+healthy = cleaner.clean_data_from(pr.healthy_food_about,"Fromages")
+print(len(healthy))
 
-#extract_attribute_list_per_category = cleaner.extract_attribute_list_per_category(pr.unhealthy_food_about,"Pizzas","product_name")
+# extract_attribute_list_per_category = cleaner.extract_attribute_list_per_category(pr.healthy_food_about,"Fromages","product_name")
 # print(extract_attribute_list_per_category)
 
-#extract_attribute_list_per_product = cleaner.extract_attribute_list_per_product(pr.unhealthy_food_about,"Pizzas",'Pizza 3 fromages' )
+# extract_attribute_list_per_product = cleaner.extract_attribute_list_per_product(pr.unhealthy_food_about,"Fromages",'Kiri' )
 # print(extract_attribute_list_per_product)
