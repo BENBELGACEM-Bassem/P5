@@ -19,7 +19,7 @@ class ApiOff:
         "Boissons à base de végétaux",
     ]
 
-    attributes = ["product_name", "categories_hierarchy", "stores", 'url']
+    attributes = ["product_name", "code", "stores", 'url', "categories_hierarchy"]
 
     @classmethod
     def healthy_choices_on(cls, wanted_category):

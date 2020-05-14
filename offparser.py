@@ -3,7 +3,6 @@
 from an api"""
 from configuration import ApiOff as api
 import requests
-import json
 
 
 class ProductFetcher:
@@ -15,7 +14,6 @@ class ProductFetcher:
             headers=api.response_header,
             params=kwargs)
         return response.json()
-
 
     def __repr__(self):
         return "this is an object to parse Api"
@@ -35,9 +33,22 @@ unhealthy_food_about = {category: fetcher.get_data_about(
 
 
 
-#testing
-# liste = (unhealthy_food_about)["Snacks salés"]["products"]
+
+# testing
+
+
+# liste = (healthy_food_about)["Snacks salés"]["products"]
 # print(len(liste))
-# liste = (unhealthy_food_about)["Fromages"]["products"]
-# #print(json.dumps(liste,indent=2,sort_keys=True))
-# print(len(liste))
+
+
+# print(json.dumps(liste,indent=2,sort_keys=True))
+
+
+# liste = (healthy_food_about)["Fromages"]["products"]
+# print(liste)
+# s=0
+# for d in liste:
+# 	x = d["categories_hierarchy"]
+# 	print(x)
+# 	s+=1
+# print(s)
