@@ -8,29 +8,24 @@ import requests
 class ProductFetcher:
     """This is a class for retrieving data from an api"""
 
-    def get_data_about(self, **kwargs):
+    @classmethod
+    def get_data_about(cls, **kwargs):
         response = requests.get(
             api.endpoint,
             headers=api.response_header,
             params=kwargs)
         return response.json()
 
-    def __repr__(self):
-        return "this is an object to parse Api"
 
 
-fetcher = ProductFetcher()
 # Creating a dictionary containing parsed data for healthy products, for
 # each category
-healthy_food_about = {category: fetcher.get_data_about(
+healthy_food_about = {category: ProductFetcher.get_data_about(
     **api.healthy_choices_on(category)) for category in api.category_list}
 # Creating a dictionary containing parsed data for unhealthy products, for
 # each category
-unhealthy_food_about = {category: fetcher.get_data_about(
+unhealthy_food_about = {category: ProductFetcher.get_data_about(
     **api.unhealthy_choices_on(category)) for category in api.category_list}
-
-
-
 
 
 
