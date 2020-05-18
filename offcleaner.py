@@ -29,14 +29,19 @@ class ProductCleaner:
         that attribute value for each product of that category   """
         filtered_data = cls.filtered_data_from(parsed_data, category)
 
-        category_attribute_values = {product.get("code"): product.get(
-            attribute) for product in filtered_data}
+        # Checking that the attribute is known
+        if attribute in pr.api.attributes:
 
-        return category_attribute_values.values()
+            category_attribute_values = {product.get("code"): product.get(
+                attribute) for product in filtered_data}
+
+            return category_attribute_values.values()
+
+        return "This attribute is unknown"
 
     @classmethod
     def extract_attribute_list_per_product(
-            cls, parsed_data, category, barecode):
+            cls, parsed_data, category, barecode, *attribute_list):
         """For a given product,within a given category, this function returns
         a list of that product attribute values """
         filtered_data = cls.filtered_data_from(parsed_data, category)
@@ -46,18 +51,29 @@ class ProductCleaner:
         products = [
             product for product in filtered_data if product.get("code") == barecode]
 
-        # Getting all attributes for the wanted product in case it exists
-        # within the given category
-        if products:
+        # Getting needed attributes for the wanted product in case it exists
+        # within the given category and all needed attributes are known
+        if products and all(
+                element in pr.api.attributes for element in attribute_list):
 
             product = products[0]
 
             product_attribute_list = [
-                product.get(attribute) for attribute in pr.api.columns]
+                product.get(attribute) for attribute in attribute_list]
 
             return product_attribute_list
 
-        return " This product is unknown"
+        # Handling error in case of an unknown product or attributes
+
+        elif products and not (all(element in pr.api.attributes for element in attribute_list)):
+
+            return "All attributes are not known"
+
+        elif not products and all(element in pr.api.attributes for element in attribute_list):
+
+            return "This product is unknown"
+
+        return " Product and attributes are unknown"
 
 
 # testing

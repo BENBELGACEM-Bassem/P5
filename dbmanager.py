@@ -11,8 +11,8 @@ class ProductRepository:
 
 	def __init__(self, db, table_title="Product"):
 		self.db = db
-		self.table_title = table_title
-		self.headers = ["id", "name", "nutrition_grade", "store", "url"]
+		self.table_title = "Product"
+		self.headers = ["id", "name", "nutrition_grade", "url"]
 
 	def create_prduct_table(self):
 		"""This function is responsible for creating the product table"""
@@ -24,7 +24,6 @@ class ProductRepository:
 		    "id SMALLINT UNSIGNED NOT NULL AUTO_INCREMENT,"
 		    "name VARCHAR(150) NOT NULL,"
 		    "nutrition_grade CHAR(1) NOT NULL,"
-		    "store TEXT NOT NULL,"
 		    "url TEXT NOT NULL UNIQUE,"  # Preventing duplicates
 		    "PRIMARY KEY (id)"
 		)
@@ -51,7 +50,7 @@ class ProductRepository:
 
 		add_product = ("INSERT INTO Product "
               "(id, name, nutrition_grade, store, url) "
-              "VALUES (%(id)s, %(name)s, %(nutrition_grade)s, %(store)s, %(url)s)")
+              "VALUES (%(id)s, %(name)s, %(nutrition_grade)s, %(url)s)")
 
 		# Looping through each category and product to define each row
 
@@ -61,14 +60,14 @@ class ProductRepository:
 			# Loop through each chosen category
 			for category in cl.pr.api.category_list:
 
-				# Loop through each product while removing duplicates inside the same category
-				for barcode in list(set(pc.extract_attribute_values_per_category(parsed_data, category, "code"))):
+				# Loop through each product of the category while removing duplicates
+				for barcode in (pc.extract_attribute_values_per_category(parsed_data, category, "code")):
 
 					# Use offcleaner module to get list of attributes values per product
-					product_row = pc.extract_attribute_list_per_product(parsed_data, category, barecode)
+					product_row = pc.extract_attribute_list_per_product(parsed_data, category, barecode, "product_name", "nutrition_grades", 'url' )
 				
 					# Get a dictionary structure with zip
-					data_product = dict(zip(self.headers, product_row))
+					data_product = dict(zip(self.headers, [None, *product_row]))
 
 					# Create the row
 					cursor.execute(add_product, data_product)
@@ -87,11 +86,18 @@ class ProductRepository:
 
 
 
+
+
+
+
+
+
+
 class CategoryRepository:
 
 	def __init__(self,db):
 		self.db = db
-		self.table_title = table_title
+		self.table_title = "Category"
 		self.headers = ["id", "name"]
 
 	def create_category_table(self):
@@ -121,7 +127,6 @@ class CategoryRepository:
 		cursor.close()
 
 
-
 	def insert_category_data(self):
 		"""This function insert category data into an already created category table"""
 
@@ -141,8 +146,12 @@ class CategoryRepository:
 			# Loop through each chosen principal category
 			for category in cl.pr.api.category_list::
 
+				# Flatten the list got from offcleaner module extract function
+				nested_list= pc.extract_attribute_values_per_category(parsed_data, category, "categories_hierarchy")
+				flatten_list = [subcategorie for subcategory_list in nested_list for subcategorie in subcategory_list ]
+
 				# Joining sub categories from each principal category
-				complete_category_list.extend(pc.extract_attribute_values_per_category(parsed_data, category, "categories_hierarchy"))
+				complete_category_list.extend(flatten_list)
 
 		# Looping through each category and sub-category to define each row
 		for category in complete_category_list :
@@ -162,14 +171,101 @@ class CategoryRepository:
 
 
 
-
 	def get_category_data(self):
 		pass
 		# Do i need to write "USE Database" here ?
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 class StoreRepository:
+		def __init__(self,db):
+		self.db = db
+		self.table_title = "Store"
+		self.headers = ["id", "name"]
+
+	def create_store_table(self):
+		"""This function is responsible for creating the store table"""
+
+		cursor = self.db.cursor()
+
+		table_description = (
+			"CREATE TABLE Store ("
+		    "id SMALLINT UNSIGNED NOT NULL AUTO_INCREMENT,"
+		    "name TEXT NOT NULL UNIQUE,"             #Preventing duplicates
+		    "PRIMARY KEY (id)"
+		)
+
+		# Creating the table and handling error related to creation
+	    try:
+	        print(f"Creating table {self.table_title}: ", end='')
+	        cursor.execute(self.table_description)
+	    except mysql.connector.Error as err:
+	        if err.errno == errorcode.ER_TABLE_EXISTS_ERROR:
+	            print("already exists.")
+	        else:
+	            print(err.msg)
+	    else:
+	        print("OK")
+
+		cursor.close()
+
+
+
+	def insert_store_data(self):
+		"""This function insert store data into an already created store table"""
+
+		cursor = self.db.cursor()
+
+		add_product = ("INSERT INTO Store "
+              "(id, name) "
+              "VALUES (%(id)s, %(name)s)")
+
+		# Looping through each category and product to define each row
+
+		# Loop through healthy and unhealthy food
+		for parsed_data in (cl.pr.healthy_food_about, cl.pr.unhealthy_food_about):
+
+			# Loop through each chosen category
+			for category in cl.pr.api.category_list:
+
+				# Loop through each product of the category while removing duplicates 
+				for barcode in list(set(pc.extract_attribute_values_per_category(parsed_data, category, "code"))):
+
+					# Use offcleaner module to get list of attributes values per product
+					product_row = pc.extract_attribute_list_per_product(parsed_data, category, barecode, "stores")
+				
+					# Get a dictionary structure with zip
+					data_product = dict(zip(self.headers, [None, *product_row]))
+
+					# Create the row
+					cursor.execute(add_product, data_product)
+
+
+
+		self.db.commit()
+		cursor.close()
+
+
+
+
+	def get_category_data(self):
+		pass
+		# Do i need to write "USE Database" here ?
 
 class PCAssociationRepository:
 
