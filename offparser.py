@@ -29,21 +29,5 @@ unhealthy_food_about = {category: ProductFetcher.get_data_about(
 
 
 
-# testing
 
 
-# liste = (healthy_food_about)["Snacks salés"]["products"]
-# print(len(liste))
-
-
-# print(json.dumps(liste,indent=2,sort_keys=True))
-
-
-# liste = (healthy_food_about)["Fromages"]["products"]
-# print(liste)
-# s=0
-# for d in liste:
-# 	x = d["categories_hierarchy"]
-# 	print(x)
-# 	s+=1
-# print(s)
