@@ -5,12 +5,12 @@ from a given API"""
 
 class ApiOff:
 
-    #Endpoint and headers in line with Open Food Fcats guideline
+    # Endpoint and headers in line with Open Food Fcats guideline
     endpoint = "https://fr.openfoodfacts.org/cgi/search.pl?"
     response_header = {
         "User-Agent": "HealthyFoodSubstitute - MacOS Catalina - Version 10.15.4"}
 
-    #list of chosen categories to be parsed from Open Food Facts Api
+    # list of chosen categories to be parsed from Open Food Facts Api
     category_list = [
         "Produits à tartiner salés",
         "Produits à tartiner sucrés",
@@ -19,7 +19,8 @@ class ApiOff:
         "Boissons à base de végétaux",
     ]
 
-    attributes = ["product_name", "nutrition_grades", 'url', "stores", "code", "categories_hierarchy"]
+    attributes = ["product_name", "nutrition_grades",
+                  'url', "stores", "code", "categories_hierarchy"]
 
     @classmethod
     def healthy_choices_on(cls, wanted_category):
@@ -54,8 +55,3 @@ class ApiOff:
             "page_size": 1000,
             "json": "true"}
         return unhealthy_choices
-
-
-
-
-

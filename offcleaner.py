@@ -12,8 +12,7 @@ class ProductCleaner:
     def filtered_data_from(cls, parsed_data, category):
         """This function removes unecesseray data from what is downloaded for a given category"""
         # List of products definition for a given category
-        # Each product is represented by a dictionary structure inside this
-        # list
+        # Each product is represented by a dictionary structure
         product_list = parsed_data.get(category).get("products")
 
         # Only needed attributes are kept for each product
@@ -32,7 +31,8 @@ class ProductCleaner:
         # Checking that the attribute is known
         if attribute in pr.api.attributes:
 
-            category_attribute_values = [product.get(attribute) for product in filtered_data]
+            category_attribute_values = [product.get(
+                attribute) for product in filtered_data if product.get("code")]
 
             return category_attribute_values
 
@@ -45,13 +45,11 @@ class ProductCleaner:
         a list of that product attribute values """
         filtered_data = cls.filtered_data_from(parsed_data, category)
 
-        # Getting the dictionary with the same product as the one we are
-        # looking for
+        # Finding our product using the given barcode
         products = [
             product for product in filtered_data if product.get("code") == barcode]
 
-        # Getting needed attributes for the wanted product in case it exists
-        # within the given category and all needed attributes are known
+        # Getting attributes values within a list
         if products and all(
                 element in pr.api.attributes for element in attribute_list):
 
@@ -74,68 +72,59 @@ class ProductCleaner:
 
         return " Product and attributes are unknown"
 
-
     @classmethod
     def all_categories_involved(cls, *args):
         """This function gets the complete list of categories involved"""
 
-        # First, initilising with principal categories
         subcategories = []
-        # Loop through healthy and unhealthy food
-        for parsed_data in args :
-            # Loop through each chosen principal category
+        for parsed_data in args:
             for category in pr.api.category_list:
-                # Flatten the subcategories list of list, got from offcleaner
-                # module extract function
-                nested_list = cls.extract_attribute_values_per_category(parsed_data, category, "categories_hierarchy")
+                # Flatten the subcategories list
+                nested_list = cls.extract_attribute_values_per_category(
+                    parsed_data, category, "categories_hierarchy")
                 flatten_list = sum(nested_list, [])
                 # Joining sub categories from each principal category
                 subcategories.extend(flatten_list)
-
-        complete_category_list = list(set((pr.api.category_list + subcategories)))
+        # Adding principal categories to the list
+        complete_category_list = list(
+            set((pr.api.category_list + subcategories)))
 
         return complete_category_list
-
 
     @classmethod
     def all_stores_involved(cls, *args):
         """This function gets the complete list of categories involved"""
-
         complete_store_list = []
-        # Loop through healthy and unhealthy food
         for parsed_data in args:
-            # Loop through each chosen category
             for category in pr.api.category_list:
-
-                # Loop through each product of the category while removing
-                # duplicates
                 for barcode in list(
                         set(cls.extract_attribute_values_per_category(parsed_data, category, "code"))):
-
                     # Get list of attributes values per product, then use split
                     # to get a list of individual store name
                     product_related_stores = cls.extract_attribute_list_per_product(
                         parsed_data, category, barcode, "stores")
 
-                    if product_related_stores[0] is not None and product_related_stores != '':
+                    if product_related_stores[0] is not None and product_related_stores[0] != '':
 
-                        complete_store_list.extend(product_related_stores[0].split(','))
-
-        complete_store_list = [i for i in list(set(complete_store_list)) if i!='']
+                        complete_store_list.extend(
+                            product_related_stores[0].split(','))
+        # Final step of removing possible empty string
+        complete_store_list = [i for i in list(
+            set(complete_store_list)) if i != '']
 
         return complete_store_list
 
-    # @classmethod
-    # def get_subcategories_per_product(cls, parsed_data, category, barcode):
+    @classmethod
+    def all_stores_involved_per_product(cls, parsed_data, category, barcode):
+        """This function gets the complete list of categories involved per product"""
 
-    #     raw_data = cls.extract_attribute_list_per_product(parsed_data, category, barcode, "categories_hierarchy")
+        complete_store_list = []
+        product_related_stores = cls.extract_attribute_list_per_product(
+            parsed_data, category, barcode, "stores")
 
+        if product_related_stores[0] is not None and product_related_stores[0] != '':
+            complete_store_list.extend(product_related_stores[0].split(','))
+        complete_store_list = [i for i in list(
+            set(complete_store_list)) if i != '']
 
-
-
-
-
-
-
-
-
+        return complete_store_list
