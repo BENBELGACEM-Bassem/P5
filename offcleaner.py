@@ -5,7 +5,6 @@ import offparser as pr
 
 
 class ProductCleaner:
-
     """This is a class for getting needed data from what is already parsed from an api"""
 
     @classmethod
@@ -75,7 +74,6 @@ class ProductCleaner:
     @classmethod
     def all_categories_involved(cls, *args):
         """This function gets the complete list of categories involved"""
-
         subcategories = []
         for parsed_data in args:
             for category in pr.api.category_list:
@@ -90,6 +88,8 @@ class ProductCleaner:
             set((pr.api.category_list + subcategories)))
 
         return complete_category_list
+
+
 
     @classmethod
     def all_stores_involved(cls, *args):
@@ -117,7 +117,6 @@ class ProductCleaner:
     @classmethod
     def all_stores_involved_per_product(cls, parsed_data, category, barcode):
         """This function gets the complete list of categories involved per product"""
-
         complete_store_list = []
         product_related_stores = cls.extract_attribute_list_per_product(
             parsed_data, category, barcode, "stores")

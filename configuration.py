@@ -2,7 +2,6 @@
 """This module contains needed cofiguration for getting data
 from a given API"""
 
-
 class ApiOff:
 
     # Endpoint and headers in line with Open Food Fcats guideline
@@ -55,3 +54,6 @@ class ApiOff:
             "page_size": 1000,
             "json": "true"}
         return unhealthy_choices
+
+
+        

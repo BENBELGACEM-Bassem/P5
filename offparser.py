@@ -1,7 +1,6 @@
 # coding: utf-8
 """This module contains classes responsible for getting data
 from an api"""
-import copy
 from configuration import ApiOff as api
 import requests
 
@@ -15,22 +14,18 @@ class ProductFetcher:
             api.endpoint,
             headers=api.response_header,
             params=kwargs)
+        if response.status_code !=200:
+            raise ApiError (f"Something went wrong according to this code {response.status_code}")
         return response.json()
 
 # Creating a dictionary containing parsed data for healthy products, for
 # each category
 
 
-healthy_food_about = {category: ProductFetcher.get_data_about(
+HEALTHY_DATA = {category: ProductFetcher.get_data_about(
     **api.healthy_choices_on(category)) for category in api.category_list}
-
-# Local copy of data
-HEALTHY_DATA_LOCAL_COPY = copy.deepcopy(healthy_food_about)
 
 # Creating a dictionary containing parsed data for unhealthy products, for
 # each category
-unhealthy_food_about = {category: ProductFetcher.get_data_about(
+UNHEALTHY_DATA = {category: ProductFetcher.get_data_about(
     **api.unhealthy_choices_on(category)) for category in api.category_list}
-
-# Local copy of data
-UNHEALTHY_DATA_LOCAL_COPY = copy.deepcopy(unhealthy_food_about)
