@@ -1,6 +1,7 @@
-# coding: utf-8
-"""This module is responsible for identifying user data base 
-and providing needed parameters to connect to Mysql server"""
+"""This module is responsible for identifying user data bas
+
+and providing needed parameters to connect to Mysql server
+"""
 
 import os
 
@@ -9,8 +10,4 @@ config = {
     'password': os.environ.get('db_pass'),
     'host': 'localhost',
     'database': 'offdb',
-    'raise_on_warnings': True
-}
-
-
-
+    'raise_on_warnings': True}

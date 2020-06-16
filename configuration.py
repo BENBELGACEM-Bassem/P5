@@ -1,13 +1,13 @@
-# coding: utf-8
-"""This module contains needed cofiguration for getting data
-from a given API"""
+"""Module to contain needed cofiguration for getting data"""
+
 
 class ApiOff:
+    """Class to encapsulate selected data about open food facts Api"""
 
     # Endpoint and headers in line with Open Food Fcats guideline
     endpoint = "https://fr.openfoodfacts.org/cgi/search.pl?"
     response_header = {
-        "User-Agent": "HealthyFoodSubstitute - MacOS Catalina - Version 10.15.4"}
+        "User-Agent": "HealthySubstitute - MacOS Catalina - Version 10.15.4"}
 
     # list of chosen categories to be parsed from Open Food Facts Api
     category_list = [
@@ -23,9 +23,7 @@ class ApiOff:
 
     @classmethod
     def healthy_choices_on(cls, wanted_category):
-        """This classmethod contains criteria tags 
-        to get healthy products for a given category, 
-        from Open Food Facts Api"""
+        """Contain criteria to get healthy products for a given category"""
         healthy_choices = {
             "action": "process",
             "tagtype_0": "categories",
@@ -40,9 +38,7 @@ class ApiOff:
 
     @classmethod
     def unhealthy_choices_on(cls, wanted_category):
-        """This classmethod contains criteria tags 
-        to get unhealthy products for a given category,
-        from Open Food Facts Api"""
+        """Contain criteria to get unhealthy products for a given category"""
         unhealthy_choices = {
             "action": "process",
             "tagtype_0": "categories",
@@ -54,6 +50,3 @@ class ApiOff:
             "page_size": 1000,
             "json": "true"}
         return unhealthy_choices
-
-
-        

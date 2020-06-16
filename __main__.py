@@ -1,3 +1,5 @@
+#! P5_benbelgacem_bassem/venv/bin/python
+# coding: utf-8
 """Module to launch the application"""
 
 from application import Application
