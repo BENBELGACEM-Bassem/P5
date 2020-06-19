@@ -14,6 +14,7 @@ class Application:
 
     def start_menu(self):
         """Start the application"""
+        print('hello')
         while True:
             try:
                 self.first_choice = int(
