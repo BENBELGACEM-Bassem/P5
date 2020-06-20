@@ -14,7 +14,7 @@ class Application:
 
     def start_menu(self):
         """Start the application"""
-        print('hello')
+        print('Hello')
         while True:
             try:
                 self.first_choice = int(
@@ -40,8 +40,6 @@ class Application:
     def categories_menu(self):
         """Launch choosing a category"""
         categories = UseCase.display_categories()
-        display_list = categories[0]
-        id_list = categories[1]
         while True:
             try:
                 self.second_choice = int(
@@ -50,22 +48,20 @@ class Application:
                         "to the category of your choice,\n"
                         "or choose 1 to go back to the start_menu:\n"
                         "1 - Start_menu\n"
-                        f"{display_list}\n"))
+                        f"{categories[0]}\n"))
             except ValueError:
                 print("Your selection is not a number ! ")
             else:
                 if self.second_choice == 1:
                     break
-                elif self.second_choice not in id_list:
+                elif self.second_choice not in categories[1]:
                     print('Your choice does not belong to suggested list')
-                elif self.second_choice in id_list:
+                elif self.second_choice in categories[1]:
                     self.unhealthy_products_menu()
 
     def unhealthy_products_menu(self):
         """Launch products choosing menu"""
         products = UseCase.display_products(self.second_choice)
-        display_list = products[0]
-        barcode_list = products[1]
         while True:
             try:
                 self.third_choice = int(
@@ -74,22 +70,20 @@ class Application:
                         "to the product of your choice,\n"
                         "or choose 1 to go back to the categories_menu:\n"
                         "1 - Catgories_menu\n"
-                        f"{display_list}\n"))
+                        f"{products[0]}\n"))
             except ValueError:
                 print("Your selection is not a number ! ")
             else:
                 if self.third_choice == 1:
                     break
-                elif self.third_choice not in barcode_list:
+                elif self.third_choice not in products[1]:
                     print('Your choice does not belong to suggested list')
-                elif self.third_choice in barcode_list:
+                elif self.third_choice in products[1]:
                     self.substitute_product_menu()
 
     def substitute_product_menu(self):
         """Display a substitute and propose to save it"""
         substitute = UseCase.find_substitute(self.third_choice)
-        display_substitute = substitute[0]
-        substitue_instances = substitute[1]
         while True:
             try:
                 self.fourth_choice = int(
@@ -99,14 +93,14 @@ class Application:
                         "Please select 1 if you want to save it "
                         "in your favourite list,\n"
                         "or 2 to go back to unhealthy product menu\n"
-                        f"{display_substitute}\n"
+                        f"{substitute[0]}\n"
                         "1 - Save\n"
                         "2 - unhealthy_products_menu\n"))
             except ValueError:
                 print("Your selection is not a number ! ")
             else:
                 if self.fourth_choice == 1:
-                    UseCase.save(*substitue_instances)
+                    UseCase.save(*substitute[1])
                     break
                 elif self.fourth_choice == 2:
                     break
