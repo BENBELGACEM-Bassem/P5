@@ -1,6 +1,6 @@
 """This module is responsible for defining menus for user experience"""
 
-from dbexplorer import UseCase
+from .dbexplorer import UseCase
 
 
 class Application:
@@ -83,25 +83,28 @@ class Application:
 
     def substitute_product_menu(self):
         """Display a substitute and propose to save it"""
-        substitute = UseCase.find_substitute(self.third_choice)
+        substitute = UseCase.display_substitute(self.third_choice)
         while True:
             try:
                 self.fourth_choice = int(
                     input(
-                        "Below is a healthy substitute for the product "
-                        "you have selected\n"
-                        "Please select 1 if you want to save it "
-                        "in your favourite list,\n"
-                        "or 2 to go back to unhealthy product menu\n"
+                        "Below is a search result for a healthy substitute "
+                        "for the product you have selected\n"
                         f"{substitute[0]}\n"
-                        "1 - Save\n"
-                        "2 - unhealthy_products_menu\n"))
+                        "1 - Save into your favourite list\n"
+                        "2 - Back to unhealthy_products_menu\n"))
             except ValueError:
                 print("Your selection is not a number ! ")
             else:
                 if self.fourth_choice == 1:
-                    UseCase.save(*substitute[1])
-                    break
+                    # Save only if a substitute is found
+                    if len(substitute) > 1:
+                        UseCase.save(substitute[1][0])
+                        print('The substitute is added to your favourite list')
+                        break
+                    else:
+                        print('There is no product to be saved')
+                        break
                 elif self.fourth_choice == 2:
                     break
                 elif self.fourth not in (1, 2):

@@ -1,10 +1,18 @@
 """This module is responsible for connecting to the user database"""
 
+import os
+
 import mysql.connector
 
 from mysql.connector import errorcode
 
-from dbidentifier import config
+
+config = {
+    'user': os.environ.get('db_user'),
+    'password': os.environ.get('db_pass'),
+    'host': 'localhost',
+    'database': 'offdb',
+    'raise_on_warnings': True}
 
 
 def connecting_to_database():

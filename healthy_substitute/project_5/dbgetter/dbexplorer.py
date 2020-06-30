@@ -3,7 +3,7 @@
 defining tools to explore the data base
 """
 
-from models import(Product, Category)
+from .models import (Product, Category)
 
 
 class UseCase:
@@ -35,24 +35,28 @@ class UseCase:
         return products_string, barcode_list
 
     @classmethod
-    def find_substitute(cls, barcode_to_substitute):
-        """Get a substitute product"""
+    def display_substitute(cls, barcode_to_substitute):
+        """Get a substitute product and display it to the user"""
         substitute_product = Product.objects.get_substitute(
             barcode_to_substitute)
-        product = substitute_product[0]
-        store = substitute_product[1]
-        substitute_string = str((str(product), str(store))) + '\n'
-        return substitute_string, substitute_product
+        # Get a tuple output for special use within application module
+        if isinstance(substitute_product, str):
+            return (substitute_product,)
+        else:
+            product = substitute_product[0]
+            store = substitute_product[1]
+            substitute_string = str((str(product), str(store))) + '\n'
+            return substitute_string, substitute_product
 
     @classmethod
-    def save(cls, *args):
-        """Save a favourite product"""
-        return Product.objects.save(args[0], args[1])
+    def save(cls, product):
+        """Save a favourite product knowing the product to substitute"""
+        return Product.objects.save(product)
 
     @classmethod
     def display_favourite_table(cls):
         """Display favourite products saved"""
-        table_content = Product.objects.get_favourite_table()
+        table_content = Product.objects.get_favourite_list()
         if isinstance(table_content, str):
             return table_content
         else:

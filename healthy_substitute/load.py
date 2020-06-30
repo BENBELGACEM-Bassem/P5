@@ -1,14 +1,13 @@
 #! P5_benbelgacem_bassem/venv/bin/python
 # coding: utf-8
-"""Module to launch the application"""
+"""Module to load data from open food facts into user database"""
 
-from project_5.dbgetter.application import Application
+from project_5.dbsetter import dbbuilder
 
 
 def main():
     """Principal application entry point"""
-    app = Application()
-    app.start_menu()
+    dbbuilder.build()
 
 
 if __name__ == "__main__":

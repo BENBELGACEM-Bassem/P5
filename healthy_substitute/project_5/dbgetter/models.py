@@ -1,8 +1,8 @@
 """This module is responsible for defining the data to be manipulated"""
 
-import dbmanager
+from . import dbmanager
 
-from database import db
+from ..userdb import db
 
 
 class Product:
@@ -10,9 +10,15 @@ class Product:
 
     objects = dbmanager.ProductRepository(db)
 
-    def __init__(self, barcode, name=None, nutrition_grade=None, url=None):
+    def __init__(
+            self,
+            barcode,
+            name=None,
+            nutrition_grade=None,
+            url=None,
+            id=None):
         """Initialise products attributes"""
-        self.id = None
+        self.id = id
         self.barcode = barcode
         self.name = name
         self.nutrition_grade = nutrition_grade
@@ -26,7 +32,9 @@ class Product:
 
     def __repr__(self):
         """Define how a product is presented with necessary attributes"""
-        return f"""barcode:{self.barcode}, name:{self.name}"""
+        return (
+            f"barcode:{self.barcode}, name:{self.name}," +
+            f"nutrition_grade:{self.nutrition_grade}")
 
 
 class Category:

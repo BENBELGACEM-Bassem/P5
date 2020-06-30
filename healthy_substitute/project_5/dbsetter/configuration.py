@@ -15,38 +15,25 @@ class ApiOff:
         "Produits à tartiner sucrés",
         "Fromages",
         "Snacks salés",
-        "Boissons à base de végétaux",
+        "Boissons à base de végétaux"
     ]
 
     attributes = ["product_name", "nutrition_grades",
                   'url', "stores", "code", "categories_hierarchy"]
+    product_characteristics = [
+        "code", "product_name", "nutrition_grades", "url"]
+
+    minimum_category_size = 1000
 
     @classmethod
-    def healthy_choices_on(cls, wanted_category):
+    def product_choices_on(cls, wanted_category, page_number):
         """Contain criteria to get healthy products for a given category"""
-        healthy_choices = {
+        product_choices = {
             "action": "process",
             "tagtype_0": "categories",
             "tag_contains_0": "contains",
             "tag_0": wanted_category,
-            "tagtype_1": "nutrition_grades",
-            "tag_contains_1": "contains",
-            "tag_1": "A",
             "page_size": 1000,
+            "page": page_number,
             "json": "true"}
-        return healthy_choices
-
-    @classmethod
-    def unhealthy_choices_on(cls, wanted_category):
-        """Contain criteria to get unhealthy products for a given category"""
-        unhealthy_choices = {
-            "action": "process",
-            "tagtype_0": "categories",
-            "tag_contains_0": "contains",
-            "tag_0": wanted_category,
-            "tagtype_1": "nutrition_grades",
-            "tag_contains_1": "contains",
-            "tag_1": "E",
-            "page_size": 1000,
-            "json": "true"}
-        return unhealthy_choices
+        return product_choices
